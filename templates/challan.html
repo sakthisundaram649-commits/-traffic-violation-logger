@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Challan #{{ record.id }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h4 class="mb-1">Traffic Challan</h4>
+                <p class="text-muted">Challan No. #{{ record.id }}</p>
+                <hr>
+                <table class="table table-sm text-start">
+                    <tr><th>Vehicle Number</th><td>{{ record.vehicle_number }}</td></tr>
+                    <tr><th>Violation</th><td>{{ record.violation_type }}</td></tr>
+                    <tr><th>Location</th><td>{{ record.location }}</td></tr>
+                    <tr><th>Date</th><td>{{ record.violation_date }}</td></tr>
+                    <tr><th>Fine Amount</th><td>₹{{ '%.2f'|format(record.fine_amount) }}</td></tr>
+                    <tr><th>Status</th>
+                        <td><span class="badge bg-{{ 'success' if record.status == 'Paid' else 'danger' }}">{{ record.status }}</span></td>
+                    </tr>
+                </table>
+                <p class="mb-2">Scan to check live payment status:</p>
+                <img src="{{ url_for('qr_code', violation_id=record.id) }}" alt="QR code" width="180" height="180">
+                <p class="small text-muted mt-2">
+                    Public link: <a href="{{ url_for('public_status', violation_id=record.id) }}">
+                        {{ url_for('public_status', violation_id=record.id, _external=True) }}
+                    </a>
+                </p>
+                <a href="{{ url_for('history') }}" class="btn btn-outline-secondary mt-2">Back to History</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

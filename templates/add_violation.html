@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Add Violation{% endblock %}
+{% block content %}
+<h2 class="mb-4">Add Violation Record</h2>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Vehicle Number</label>
+                    <input type="text" name="vehicle_number" class="form-control" placeholder="e.g. TN09AB1234" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Violation Type</label>
+                    <select name="violation_type" class="form-select" required>
+                        <option value="">-- Select --</option>
+                        <option>No Helmet</option>
+                        <option>Overspeeding</option>
+                        <option>Signal Jump</option>
+                        <option>No Seatbelt</option>
+                        <option>Wrong Parking</option>
+                        <option>Driving Without License</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Location</label>
+                    <input type="text" name="location" class="form-control" placeholder="e.g. Anna Nagar Signal" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="violation_date" class="form-control" value="{{ today }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Fine Amount (₹)</label>
+                    <input type="number" step="0.01" min="0" name="fine_amount" class="form-control" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Save Violation</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h6 class="card-title">Total Violations</h6>
+                <h2>{{ total }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h6 class="card-title">Unpaid</h6>
+                <h2>{{ unpaid }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h6 class="card-title">Paid</h6>
+                <h2>{{ paid }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5>Recently Added</h5>
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Vehicle No.</th>
+            <th>Violation</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Fine</th>
+            <th>Status</th>
+            <th>Challan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in recent %}
+        <tr>
+            <td>{{ r.vehicle_number }}</td>
+            <td>{{ r.violation_type }}</td>
+            <td>{{ r.location }}</td>
+            <td>{{ r.violation_date }}</td>
+            <td>₹{{ '%.2f'|format(r.fine_amount) }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if r.status == 'Paid' else 'danger' }}">{{ r.status }}</span>
+            </td>
+            <td><a href="{{ url_for('challan', violation_id=r.id) }}" class="btn btn-sm btn-outline-secondary">View</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted">No records yet. Click "Add Violation" to create one.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

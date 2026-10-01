@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Violation History{% endblock %}
+{% block content %}
+<h2 class="mb-4">Violation History</h2>
+
+<form method="GET" class="row g-2 mb-4 bg-white p-3 border rounded">
+    <div class="col-md-3">
+        <input type="text" name="vehicle_number" class="form-control" placeholder="Vehicle Number"
+               value="{{ filters.get('vehicle_number', '') }}">
+    </div>
+    <div class="col-md-2">
+        <select name="status" class="form-select">
+            <option value="">Any Status</option>
+            <option value="Paid" {% if filters.get('status') == 'Paid' %}selected{% endif %}>Paid</option>
+            <option value="Unpaid" {% if filters.get('status') == 'Unpaid' %}selected{% endif %}>Unpaid</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <input type="text" name="violation_type" class="form-control" placeholder="Violation Type"
+               value="{{ filters.get('violation_type', '') }}">
+    </div>
+    <div class="col-md-2">
+        <input type="date" name="date_from" class="form-control" value="{{ filters.get('date_from', '') }}">
+    </div>
+    <div class="col-md-2">
+        <input type="date" name="date_to" class="form-control" value="{{ filters.get('date_to', '') }}">
+    </div>
+    <div class="col-md-1 d-grid">
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Vehicle No.</th>
+            <th>Violation</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Fine</th>
+            <th>Status</th>
+            <th>Challan</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in records %}
+        <tr>
+            <td>{{ r.vehicle_number }}</td>
+            <td>{{ r.violation_type }}</td>
+            <td>{{ r.location }}</td>
+            <td>{{ r.violation_date }}</td>
+            <td>₹{{ '%.2f'|format(r.fine_amount) }}</td>
+            <td><span class="badge bg-{{ 'success' if r.status == 'Paid' else 'danger' }}">{{ r.status }}</span></td>
+            <td><a href="{{ url_for('challan', violation_id=r.id) }}" class="btn btn-sm btn-outline-secondary">View</a></td>
+            <td>
+                <form method="POST" action="{{ url_for('update_status', violation_id=r.id) }}">
+                    <button type="submit" class="btn btn-sm btn-outline-{{ 'danger' if r.status == 'Paid' else 'success' }}">
+                        Mark {{ 'Unpaid' if r.status == 'Paid' else 'Paid' }}
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted">No matching records found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
